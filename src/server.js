@@ -16,7 +16,7 @@ import HandlebarsConfig from "./helpers/HandlebarsConfig";
 // Récupération des controllers
 import SeedDbController from "./controllers/SeedDbController";
 import HomeController from "./controllers/HomeController";
-import ShowController from "./controllers/ShowController";
+import GameController from "./controllers/GameController";
 import BookingController from "./controllers/BookingController";
 
 // Configuration du serveur
@@ -66,13 +66,13 @@ server.post('/seeddb', SeedDbController.seedDb);
 // Routes pour les vues
 server.get('/', HomeController.getIndex);
 
-server.get('/shows', ShowController.getShows);
-server.get('/shows/id/:id', ShowController.getShow);
-server.get('/shows/create', ShowController.getCreateShow);
-server.post('/shows/create', ShowController.postCreateShow);
-server.get('/shows/update/:id', ShowController.getUpdateShow);
-server.post('/shows/update/:id', ShowController.postUpdateShow);
-server.get('/shows/delete/:id', ShowController.getDeleteShow);
+server.get('/Games', GameController.getGames);
+server.get('/Games/id/:id', GameController.getGame);
+server.get('/Games/create', GameController.getCreateGame);
+server.post('/Games/create', GameController.postCreateGame);
+server.get('/Games/update/:id', GameController.getUpdateGame);
+server.post('/Games/update/:id', GameController.postUpdateGame);
+server.get('/Games/delete/:id', GameController.getDeleteGame);
 
 server.get('/bookings', BookingController.getBookings);
 server.get('/bookings/id/:id', BookingController.getBooking);
@@ -85,11 +85,11 @@ server.get('/bookings/delete/:id', BookingController.getDeleteBooking);
 // Routes pour les APIs
 server.get('/api/', HomeController.getIndexApi);
 
-server.get('/api/shows', ShowController.getShowsApi);
-server.get('/api/shows/id/:id', ShowController.getShowApi);
-server.post('/api/shows/create', ShowController.postCreateShowApi);
-server.post('/api/shows/update/:id', ShowController.postUpdateShowApi);
-server.post('/api/shows/delete/:id', ShowController.postDeleteShowApi);
+server.get('/api/Games', GameController.getGamesApi);
+server.get('/api/Games/id/:id', GameController.getGameApi);
+server.post('/api/Games/create', GameController.postCreateGameApi);
+server.post('/api/Games/update/:id', GameController.postUpdateGameApi);
+server.post('/api/Games/delete/:id', GameController.postDeleteGameApi);
 
 server.get('/api/bookings', BookingController.getBookingsApi);
 server.get('/api/bookings/id/:id', BookingController.getBookingApi);

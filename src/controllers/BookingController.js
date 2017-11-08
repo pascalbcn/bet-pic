@@ -4,7 +4,7 @@ import Errors from "../helpers/Errors";
 
 // Récupération du model
 import BookingModel from "../models/BookingModel";
-import ShowModel from "../models/ShowModel";
+import GameModel from "../models/GameModel";
 
 const bookings = () => {
   return BookingModel.getBookings()
@@ -18,7 +18,7 @@ const bookings = () => {
       response[response.length] = {
         id: booking._id,
         username: booking.username,
-        showId: booking.showId,
+        GameId: booking.GameId,
         seats: booking.seats,
         createdAt: booking.createdAt,
         updatedAt: booking.updatedAt,
@@ -38,7 +38,7 @@ const booking = (_id) => {
     let response = {
       id: data._id,
       username: data.username,
-      showId: data.showId,
+      GameId: data.GameId,
       seats: data.seats,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
@@ -82,9 +82,9 @@ export default {
   },
 
   getCreateBooking: (req, res) => {
-    ShowModel.getShows()
+    GameModel.getGames()
     .then((data) => {
-      res.render('booking/createBooking', { shows: data });
+      res.render('booking/createBooking', { Games: data });
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
@@ -94,7 +94,7 @@ export default {
   postCreateBooking: (req, res) => {
     let booking = {
       username: req.body.username,
-      showId: req.body.showId,
+      GameId: req.body.GameId,
       seats: req.body.seats,
     };
 
@@ -110,10 +110,10 @@ export default {
   getUpdateBooking: (req, res) => {
     Promise.all([
       booking(req.params.id),
-      ShowModel.getShows(),
+      GameModel.getGames(),
     ])
     .then((data) => {
-      res.render('booking/updateBooking', { booking: data[0], shows: data[1] });
+      res.render('booking/updateBooking', { booking: data[0], Games: data[1] });
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
@@ -123,7 +123,7 @@ export default {
   postUpdateBooking: (req, res) => {
     let booking = {
       username: req.body.username,
-      showId: req.body.showId,
+      GameId: req.body.GameId,
       seats: req.body.seats,
     };
 
@@ -170,7 +170,7 @@ export default {
   postCreateBookingApi: (req, res) => {
     let booking = {
       username: req.body.username,
-      showId: req.body.showId,
+      GameId: req.body.GameId,
       seats: req.body.seats,
     };
 
@@ -186,7 +186,7 @@ export default {
   postUpdateBookingApi: (req, res) => {
     let booking = {
       username: req.body.username,
-      showId: req.body.showId,
+      GameId: req.body.GameId,
       seats: req.body.seats,
     };
 
