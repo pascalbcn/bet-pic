@@ -1,45 +1,47 @@
-// Controller de la route '/bookings'
+// Controller de la route '/bets'
 import _ from "lodash";
 import Errors from "../helpers/Errors";
 
 // Récupération du model
-import BookingModel from "../models/BookingModel";
+import BetModel from "../models/BetModel";
 import GameModel from "../models/GameModel";
 
-const bookings = () => {
-  return BookingModel.getBookings()
+const bets = () => {
+  return BetModel.getBets()
   .then((data) => {
     if (data === null) {
-      throw new Error('noBookingsError');
+      throw new Error('noBetsError');
     }
 
     let response = [];
-    for (let booking of data){
+    for (let bet of data){
       response[response.length] = {
-        id: booking._id,
-        username: booking.username,
-        GameId: booking.GameId,
-        seats: booking.seats,
-        createdAt: booking.createdAt,
-        updatedAt: booking.updatedAt,
+        id: bet.id,
+        username: bet.username,
+        GameId: bet.GameId,
+        
+        bet: bet.bet,
+        createdAt: bet.createdAt,
+        updatedAt: bet.updatedAt,
       }
     }
     return _.sortBy(response, 'username');
   });
 }
 
-const booking = (_id) => {
-  return BookingModel.getBooking(_id)
+const bet = (_id) => {
+  return BetModel.getBet(_id)
   .then((data) => {
     if (data === null) {
-      throw new Error('noBookingError');
+      throw new Error('noBetError');
     }
 
     let response = {
-      id: data._id,
+      id: data.id,
       username: data.username,
       GameId: data.GameId,
-      seats: data.seats,
+      
+      bet: data.bet,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     };
@@ -47,99 +49,99 @@ const booking = (_id) => {
   });
 }
 
-const createBooking = (booking) => {
-  return BookingModel.createBooking(booking);
+const createBet = (bet) => {
+  return BetModel.createBet(bet);
 }
 
-const updateBooking = (id, booking) => {
-  return BookingModel.updateBooking(id, booking);
+const updateBet = (id, bet) => {
+  return BetModel.updateBet(id, bet);
 }
 
-const deleteBooking = (id) => {
-  return BookingModel.deleteBooking(id);
+const deleteBet = (id) => {
+  return BetModel.deleteBet(id);
 }
 
 export default {
   // Controller des views
-  getBookings: (req, res) => {
-    bookings()
+  getBets: (req, res) => {
+    bets()
     .then((data) => {
-      res.render('booking/bookings', { bookings: data });
+      res.render('bet/bets', { bets: data });
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
     });
   },
 
-  getBooking: (req, res) => {
-    booking(req.params.id)
+  getBet: (req, res) => {
+    bet(req.params.id)
     .then((data) => {
-      res.render('booking/booking', { booking: data });
+      res.render('bet/bet', { bet: data });
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
     });
   },
 
-  getCreateBooking: (req, res) => {
+  getCreateBet: (req, res) => {
     GameModel.getGames()
     .then((data) => {
-      res.render('booking/createBooking', { Games: data });
+      res.render('bet/createBet', { Games: data });
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
     });
   },
 
-  postCreateBooking: (req, res) => {
-    let booking = {
-      username: req.body.username,
+  postCreateBet: (req, res) => {
+    let bet = {
+      id: req.body.id,
       GameId: req.body.GameId,
-      seats: req.body.seats,
+      
     };
 
-    createBooking(booking)
+    createBet(bet)
     .then((data) => {
-      res.redirect('/bookings');
+      res.redirect('/bets');
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
     });
   },
 
-  getUpdateBooking: (req, res) => {
+  getUpdateBet: (req, res) => {
     Promise.all([
-      booking(req.params.id),
+      bet(req.params.id),
       GameModel.getGames(),
     ])
     .then((data) => {
-      res.render('booking/updateBooking', { booking: data[0], Games: data[1] });
+      res.render('bet/updateBet', { bet: data[0], Games: data[1] });
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
     });
   },
 
-  postUpdateBooking: (req, res) => {
-    let booking = {
-      username: req.body.username,
+  postUpdateBet: (req, res) => {
+    let bet = {
+      id: req.body.id,
       GameId: req.body.GameId,
-      seats: req.body.seats,
+      
     };
 
-    updateBooking(req.params.id, booking)
+    updateBet(req.params.id, bet)
     .then((data) => {
-      res.redirect('/bookings');
+      res.redirect('/bets');
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
     });
   },
 
-  getDeleteBooking: (req, res) => {
-    deleteBooking(req.params.id)
+  getDeleteBet: (req, res) => {
+    deleteBet(req.params.id)
     .then((data) => {
-      res.redirect('/bookings');
+      res.redirect('/bets');
     }, (err) => {
       console.log(err);
       res.status(Errors(err).code).send(Errors(err));
@@ -147,8 +149,8 @@ export default {
   },
 
   // Controller des Apis
-  getBookingsApi: (req, res) => {
-    bookings()
+  getBetsApi: (req, res) => {
+    bets()
     .then((data) => {
       res.send(data);
     }, (err) => {
@@ -157,8 +159,8 @@ export default {
     });
   },
 
-  getBookingApi: (req, res) => {
-    booking(req.params.id)
+  getBetApi: (req, res) => {
+    bet(req.params.id)
     .then((data) => {
       res.send(data);
     }, (err) => {
@@ -167,14 +169,14 @@ export default {
     });
   },
 
-  postCreateBookingApi: (req, res) => {
-    let booking = {
-      username: req.body.username,
+  postCreateBetApi: (req, res) => {
+    let bet = {
+      id: req.body.id,
       GameId: req.body.GameId,
-      seats: req.body.seats,
+      
     };
 
-    createBooking(booking)
+    createBet(bet)
     .then((data) => {
       res.send('ok');
     }, (err) => {
@@ -183,14 +185,14 @@ export default {
     });
   },
 
-  postUpdateBookingApi: (req, res) => {
-    let booking = {
-      username: req.body.username,
+  postUpdateBetApi: (req, res) => {
+    let bet = {
+      id: req.body.id,
       GameId: req.body.GameId,
-      seats: req.body.seats,
+      
     };
 
-    updateBooking(req.params.id, booking)
+    updateBet(req.params.id, bet)
     .then((data) => {
       res.send('ok');
     }, (err) => {
@@ -199,8 +201,8 @@ export default {
     });
   },
 
-  postDeleteBookingApi: (req, res) => {
-    deleteBooking(req.params.id)
+  postDeleteBetApi: (req, res) => {
+    deleteBet(req.params.id)
     .then((data) => {
       res.send('ok');
     }, (err) => {
